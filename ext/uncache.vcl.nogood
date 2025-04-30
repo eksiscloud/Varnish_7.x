@@ -1,0 +1,46 @@
+##
+sub no_mercy {
+
+	if (bereq.http.Authorization || bereq.method == "POST" || bereq.http.x-bot == "tech") {
+		set beresp.uncacheable = true;
+		return (deliver);
+	}
+
+	if (bereq.http.X-Bypass-Cache == "1" && bereq.http.User-Agent == "CacheWarmer") {
+		set beresp.uncacheable = true;
+                return (deliver);
+	}
+
+	if (bereq.url ~ "\_csp|adsbygoogle") {
+		set beresp.uncacheable = true;
+		return (deliver);
+	}
+
+	if (bereq.http.X-Requested-With == "XMLHttpRequest") {
+		set beresp.uncacheable = true;
+                return (deliver);
+	}
+
+	if (bereq.http.host ~ "www.(katiska|eksis)|jagster.|dev.|store.") {
+		if (
+		# almost every mine WordPresses have this common
+		bereq.url ~ "^/wp-(activate|admin|comments|cron|login|json|mail)" ||
+		bereq.url ~ "^/(login|logout|lost-password|my-account|register|signin|signup|preview=)" ||
+		bereq.url ~ "(avainsana|tag)" ||
+		bereq.url ~ "laskeutumissivut|tiedustelut|postilista|lataukset|pong" ||
+		bereq.url ~ "^/(cart|checkout|tuote|wc-api)" ||
+		bereq.url ~ "add_to_cart|edd_action|nocache" ||
+		bereq.url ~ "^\?(add-to-cart=|wc-api=)"
+		) {
+			set beresp.uncacheable = true;
+			return (deliver);
+		}
+
+		if (bereq.http.cookie ~ "(wordpress_logged_in|resetpass|postpass)") {
+			set beresp.uncacheable = true;
+                        return (deliver);
+		}
+	}
+
+# this is the end
+}

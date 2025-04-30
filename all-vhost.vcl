@@ -1,0 +1,11 @@
+#include "sites-enabled/server.vcl";
+include "sites-enabled/jagster.fi.vcl";
+include "sites-enabled/katiska.info.vcl";
+#include "sites-enabled/en.katiska.info.vcl";
+#include "sites-enabled/se.katiska.info.vcl";
+include "sites-enabled/selko.katiska.vcl";
+include "sites-enabled/store.katiska.vcl";
+include "sites-enabled/eksis.one.vcl";
+#include "sites-enabled/git.eksis.one.vcl";
+include "sites-enabled/stats.eu.vcl";
+include "sites-enabled/eksis.dev.vcl";
