@@ -103,23 +103,23 @@ sub tech_things {
 #       }
 
 	# UA git is allowed only with Gitea
-       if (req.http.User-Agent ~ "git/") {
-               if (req.http.host != "git.eksis.one" && std.ip(req.http.X-Real-IP, "0.0.0.0") !~ whitelist) {
-                        #if (req.http.X-Country-Code ~ "fi" || 
-                       if (req.http.x-language ~ "fi") {
-                               set req.http.x-bot = "bad";
-				set req.http.x-user-agent = req.http.x-bot;
-                               return(synth(403, "Access Denied " + req.http.X-Real-IP));
-                       } else {
-                               set req.http.x-bot = "bad";
-				set req.http.x-user-agent = req.http.x-bot;
-                               return(synth(666, "Forbidden Bot " + req.http.X-Real-IP));
-                       } 
-               } else {
-                       set req.http.x-bot = "tech";
-			set req.http.x-user-agent = req.http.User-Agent;
-               }
-       }
+#       if (req.http.User-Agent ~ "git/") {
+#               if (req.http.host != "git.eksis.one" && std.ip(req.http.X-Real-IP, "0.0.0.0") !~ whitelist) {
+#                        #if (req.http.X-Country-Code ~ "fi" || 
+#                       if (req.http.x-language ~ "fi") {
+#                               set req.http.x-bot = "bad";
+#				set req.http.x-user-agent = req.http.x-bot;
+#                               return(synth(403, "Access Denied " + req.http.X-Real-IP));
+#                       } else {
+#                               set req.http.x-bot = "bad";
+#				set req.http.x-user-agent = req.http.x-bot;
+#                               return(synth(666, "Forbidden Bot " + req.http.X-Real-IP));
+#                       } 
+#               } else {
+#                       set req.http.x-bot = "tech";
+#			set req.http.x-user-agent = req.http.User-Agent;
+#               }
+#       }
 
 # And here's the end
 }

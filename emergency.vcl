@@ -20,9 +20,9 @@ import std;
 
 ## Backend tells where a site can be found
 backend default {
-	.host = "46.101.234.10";
-	.port = "82";
-#	.max_connections = 800; 
+	.host = "127.0.0.1";
+	.port = "8282";
+	.max_connections = 5000; 
 	.first_byte_timeout = 300s;
 	.connect_timeout = 300s;
 	.between_bytes_timeout = 300s;
@@ -37,15 +37,6 @@ backend default {
 #	.connect_timeout = 300s;
 #	.between_bytes_timeout = 300s;
 #}
-
-# meta.katiska.info by Discourse in other DO droplet
-backend meta {
-	.host = "159.65.120.229";
-	.port = "83";
-	.first_byte_timeout = 300s;
-	.connect_timeout = 300s;
-	.between_bytes_timeout = 300s;
-}
 
 #################### vcl_init ##################
 
@@ -75,19 +66,13 @@ sub vcl_recv {
 	req.http.host == "www.eksis.one" ||
 	req.http.host == "dev.eksis.one" ||
 	req.http.host == "jagster.eksis.one" ||
-	req.http.host == "www.ymparistosuunnittelija.com" ||
-	req.http.host == "katti.katiska.eu" ||
 	req.http.host == "selko.katiska.eu" ||
 	req.http.host == "www.eksis.eu" ||
 	req.http.host == "store.katiska.eu" ||
-	req.http.host == "pro.katiska.eu" ||
-	req.http.host == "pro.eksis.one" ||
 	req.http.host == "stats.eksis.eu" 
 	) {
 		set req.backend_hint = default;
 	} 
-	
-	if (req.http.host == "meta.katiska.info") { set req.backend_hint = meta; }
 	
 	#if (req.http.host == "git.eksis.one") { set req.backend_hint = gitea; }
 
