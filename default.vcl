@@ -435,9 +435,6 @@ sub vcl_recv {
 	# I don't understand at all what this is doing
 	set req.http.Surrogate-Capability = "key=ESI/1.0";
 
-	## I don't need x-user-agent anymore
-	unset req.http.x-user-agent;
-
 	## At this point we jump to all-cookies.vcl
 } 
 
