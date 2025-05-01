@@ -323,29 +323,33 @@ sub vcl_recv {
 	# ext/filtering/asn.vcl
 	call asn_name;
 	
-	
-	## Technical probes, so normalize UA using probes.vcl
-	# These are useful and I want to know if backend is working etc.
-	# ext/filtering/probes.vcl
-	call tech_things;
-	
-	# These are nice bots, and I'm normalizing using nice-bot.vcl and using just one UA
-	# ext/filtering/nice-bot.vcl
-	call cute_bot_allowance;
-	
-	## Now we stop known useless ones who's not from whitelisted IPs using bad-bot.vcl
-	# This should not be active if Nginx do what it should do because I have bot filtering there
-	#if (std.ip(req.http.X-Real-IP, "0.0.0.0") !~ whitelist) {
-		# ext/filtering/bad-bot.vcl
-	#	call bad_bot_detection;
-	#}
-	
 	## User and bots, so let's normalize UA, mostly just for easier reading of varnishtop
         # These should be real users, but some aren't
-	# ext/filtering/user-ua.vcl
-	call real_users;
+        # ext/filtering/user-ua.vcl
+        call real_users;
+	
+	# Technical probes, so normalize UA using probes.vcl
+	# These are useful and I want to know if backend is working etc.
+	# ext/filtering/probes.vcl
+	if (!req.http.x-bot !~ "visitor") {
+		call tech_things;
+	}
 
-	## If a user agent isn't identified as user or a bot, its type is unknown
+	# These are nice bots, and I'm normalizing using nice-bot.vcl and using just one UA
+	# ext/filtering/nice-bot.vcl
+	if (req.http.x-bot !~ "(visitor|tech)") {
+		call cute_bot_allowance;
+	
+	# Now we stop known useless ones who's not from whitelisted IPs using bad-bot.vcl
+	# This should not be active if Nginx do what it should do because I have bot filtering there
+	#if (std.ip(req.http.X-Real-IP, "0.0.0.0") !~ whitelist) {
+	#	if (req.http.x-bot !~ "(visitor|tech|nice)") {
+			# ext/filtering/bad-bot.vcl
+	#		call bad_bot_detection;
+	#	}
+	#}
+	
+	# If a user agent isn't identified as user or a bot, its type is unknown
 	if (!req.http.x-user-agent) {
                 set req.http.x-user-agent = "Unlisted: " + req.http.User-Agent;
         }
