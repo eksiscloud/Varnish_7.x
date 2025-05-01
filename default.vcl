@@ -1,6 +1,6 @@
 ## Jakke Lehtonen
-## https://git.eksis.one/jagster/varnish_6.x
-## from several sources
+## 
+## Builded from several sources
 ## Heads up! There is errors for sure
 ## I'm just another copypaster
 ##
@@ -8,8 +8,6 @@
 ## 
 ## Known issues:
 ##  - easy to get false bans (googlebot, Bing...) 
-##
-##  There is more general README.md
 ##
 ## Lets's start caching (...and a little bit more)
  
@@ -305,7 +303,7 @@ sub vcl_recv {
                 "(ru_RU|ru-RU|ru$)"
 	) {
                 std.log("banned language: " + req.http.accept-language);
-		return(synth(403, "Un-supported language: " + req.http.accept-language));
+		return(synth(403, "Unsupported language: " + req.http.accept-language));
 	}
 
 	# passing.vcl
