@@ -331,20 +331,20 @@ sub vcl_recv {
 	# Technical probes, so normalize UA using probes.vcl
 	# These are useful and I want to know if backend is working etc.
 	# ext/filtering/probes.vcl
-	if (req.http.x-bot !~ "visitor") {
+	if (req.http.x-bot != "visitor") {
 		call tech_things;
 	}
 
 	# These are nice bots, and I'm normalizing using nice-bot.vcl and using just one UA
 	# ext/filtering/nice-bot.vcl
-	if (req.http.x-bot !~ "(visitor|tech)") {
+	if (req.http.x-bot != "(visitor|tech)") {
 		call cute_bot_allowance;
 	}
 	
 	# Now we stop known useless ones who's not from whitelisted IPs using bad-bot.vcl
 	# This should not be active if Nginx do what it should do because I have bot filtering there
 	#if (std.ip(req.http.X-Real-IP, "0.0.0.0") !~ whitelist) {
-	#	if (req.http.x-bot !~ "(visitor|tech|nice)") {
+	#	if (req.http.x-bot != "(visitor|tech|nice)") {
 			# ext/filtering/bad-bot.vcl
 	#		call bad_bot_detection;
 	#	}
