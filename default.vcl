@@ -331,7 +331,7 @@ sub vcl_recv {
 	# Technical probes, so normalize UA using probes.vcl
 	# These are useful and I want to know if backend is working etc.
 	# ext/filtering/probes.vcl
-	if (!req.http.x-bot !~ "visitor") {
+	if (req.http.x-bot !~ "visitor") {
 		call tech_things;
 	}
 
