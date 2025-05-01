@@ -355,6 +355,9 @@ sub vcl_recv {
                 set req.http.x-user-agent = "Unlisted: " + req.http.User-Agent;
         }
 
+	# Now it is time to delete user-agent. We don't want use it to do separate caching.
+	unset req.http.User-Agent;
+
 	## Stop bots and knockers seeking holes using 403.vcl
 	# I don't let search agents and similar to forbidden urls. Otherwise Fail2ban would ban theirs IPs too.
 	# I get error for testing purposes, but Fail2ban has whitelisted my IP.
