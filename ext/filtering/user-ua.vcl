@@ -42,7 +42,4 @@ sub real_users {
 		set req.http.x-user-agent = "Mac/iPad";
         }
 
-	if (!req.http.x-user-agent) {
-		set req.http.x-user-agent = "Unlisted: " + req.http.User-Agent;
-	}
 }

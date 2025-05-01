@@ -345,6 +345,11 @@ sub vcl_recv {
 	# ext/filtering/user-ua.vcl
 	call real_users;
 
+	## If a user agent isn't identified as user or a bot, its type is unknown
+	if (!req.http.x-user-agent) {
+                set req.http.x-user-agent = "Unlisted: " + req.http.User-Agent;
+        }
+
 	## Stop bots and knockers seeking holes using 403.vcl
 	# I don't let search agents and similar to forbidden urls. Otherwise Fail2ban would ban theirs IPs too.
 	# I get error for testing purposes, but Fail2ban has whitelisted my IP.
