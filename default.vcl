@@ -339,6 +339,7 @@ sub vcl_recv {
 	# ext/filtering/nice-bot.vcl
 	if (req.http.x-bot !~ "(visitor|tech)") {
 		call cute_bot_allowance;
+	}
 	
 	# Now we stop known useless ones who's not from whitelisted IPs using bad-bot.vcl
 	# This should not be active if Nginx do what it should do because I have bot filtering there
