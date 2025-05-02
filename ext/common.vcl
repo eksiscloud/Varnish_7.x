@@ -66,7 +66,7 @@ sub common_rules {
 	#}
 	
 	## Only deal with "normal" types
-	# Just an example. I'm dealing this at Nginx when needed.
+	# In-build rules. Those aren't needed, unless return(...) forces skip it.
 	# Heads up! BAN/PURGE/REFRESH must be done before this or declared here. Unless those don't work when purging or banning.
 	#if (req.method != "GET" &&
 	#req.method != "HEAD" &&
@@ -94,10 +94,10 @@ sub common_rules {
 	}
 	
 	## Auth requests shall be passed
-	# For some reason I couldn't browse images at WordPress if I pass. So, I'm using pipe instead.
-	if (req.http.Authorization || req.method == "POST") {
-		return(pass);
-	}
+	# In-build rule. doesn't needed here.
+	#if (req.http.Authorization || req.method == "POST") {
+	#	return(pass);
+	#}
 	
 	## Do not cache AJAX requests.
 	if (req.http.X-Requested-With == "XMLHttpRequest") {
@@ -105,10 +105,10 @@ sub common_rules {
 	}
 	
 	## Only GET and HEAD are cacheable methods AFAIK
-	# Well, Varnish doesn't cache POST and others anyway, but I don't like unneeded pass-jumps so why is this here in first place?
-#	if (req.method != "GET" && req.method != "HEAD") {
-#		return(pass);
-#	}
+	# In-build rule, doesn't needed here
+	#if (req.method != "GET" && req.method != "HEAD") {
+	#	return(pass);
+	#}
 	
 	## Enable smart refreshing, aka. ctrl+F5 will flush that page
 	# Remember your header Cache-Control must be set something else than no-cache
@@ -126,6 +126,7 @@ sub common_rules {
 	
 	## Page that Monit will ping
 	# Change this URL to something that will NEVER be a real URL for the hosted site, it will be effectively inaccessible.
+	# 200 OK is same as pass
 	if (req.url == "^/monit-zxcvb") {
 		return(synth(200, "OK"));
 	}

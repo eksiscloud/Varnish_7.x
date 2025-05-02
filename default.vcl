@@ -270,11 +270,11 @@ sub vcl_recv {
 	#unset req.http.Proxy;
 
 	## It will terminate badly formed requests
-	## Varnish may do this anyway, IDK
-	if (!req.http.host && req.esi_level == 0 && req.proto ~ "^(?i)HTTP/1.1") {
-		# In HTTP/1.1, Host is required.
-		return (synth(400));
-	}
+	## Build-in rule, that's why it is commented. But works only if there isn't return(...) that forces jump away
+	#if (!req.http.host && req.esi_level == 0 && req.proto ~ "^(?i)HTTP/1.1") {
+	#	# In HTTP/1.1, Host is required.
+	#	return (synth(400));
+	#}
 
 	## Normalize the header, remove the port (in case you're testing this on various TCP ports)
 	set req.http.host = std.tolower(req.http.host);
@@ -406,18 +406,20 @@ sub vcl_recv {
 		set req.url = regsub(req.url, "\?$", "");
 	}
 	
-	## Strip querystring ?nocache, 3rd party doesn't tell when caching or not
-	set req.url = regsuball(req.url, "\?nocache", "");
+	## All these affects only browsers and backend just doesn't care. No need to waste time and energy to clean these.
 	
-	## Strip a plain HTML anchor #, server doesn't need it.
-	if (req.url ~ "\#") {
-		set req.url = regsub(req.url, "\#.*$", "");
-	}
+	# Strip querystring ?nocache, 3rd party doesn't tell when caching or not
+	#set req.url = regsuball(req.url, "\?nocache", "");
+	
+	# Strip a plain HTML anchor #, server doesn't need it.
+	#if (req.url ~ "\#") {
+	#	set req.url = regsub(req.url, "\#.*$", "");
+	#}
 
-	## Strip a trailing ? if it exists 
-	if (req.url ~ "\?$") {
-		set req.url = regsub(req.url, "\?$", "");
-	}
+	# Strip a trailing ? if it exists 
+	#if (req.url ~ "\?$") {
+	#	set req.url = regsub(req.url, "\?$", "");
+	#}
 	
 	## URL changes by ext/redirect/manipulate.vcl, mostly fixed search strings
 	if (req.http.x-bot == "visitor") {
