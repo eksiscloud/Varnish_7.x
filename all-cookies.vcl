@@ -13,18 +13,19 @@ sub vcl_recv {
 	# But I'm using x-host to filter different type of sites.
 	
 	# Gitea (almost nothing can be cached)
-	if (req.http.host ~ "git.eksis.one") {
-		set req.http.x-host = "gitea";
-		cookie.parse(req.http.cookie);
+#	if (req.http.host ~ "git.eksis.one") {
+#		set req.http.x-host = "gitea";
+#		cookie.parse(req.http.cookie);
 		# https://docs.gitea.io/en-us/config-cheat-sheet/
-		cookie.keep("i_like_gitea,_csrf,redirect_to,lang,gitea_incredible,gitea_awesome");
-		set req.http.cookie = cookie.get_string();
-		cookie.keep("lang");
-		set req.http.cookie-lang = cookie.get_string();
-	}
+#		cookie.keep("i_like_gitea,_csrf,redirect_to,lang,gitea_incredible,gitea_awesome");
+#		set req.http.cookie = cookie.get_string();
+#		cookie.keep("lang");
+#		set req.http.cookie-lang = cookie.get_string();
+#	}
 		
 	# Matomo (no point to cache what so ever)
-	elseif (req.http.host ~ "stats.eksis.eu") {
+#	elseif 
+	if (req.http.host ~ "stats.eksis.eu") {
 		set req.http.x-host = "matomo";
 		cookie.parse(req.http.cookie);
 		cookie.keep("piwik_,MATOMO_");
