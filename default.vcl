@@ -1058,8 +1058,13 @@ sub vcl_fini {
   return(ok);
 }
 
+## A couple includes keeping default.vcl more readable
+# These two must be in this order, because Varnish does things in order
+# We don't need to declare these, because Varnish knows where they belong in.
+# We can't use them in the beginning either, because then Varnish would use they too early.
 
 # Vhosts, needed when multiple virtual hosts is in use
-# must be in this order
 include "all-vhost.vcl";
+
+# Cookies are now handled last in the vcl_recv
 include "all-cookies.vcl";
