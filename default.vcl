@@ -605,14 +605,25 @@ sub vcl_backend_response {
 	## How long Varnish will keep objects is guided by ext/cache-ttl.vcl
 	call time_to_go;
 	
-	## Send User-Agent to backend, but removing it from Vary prevents Varnish to use it for caching
-        if (beresp.http.Vary ~ "User-Agent") {
-                set beresp.http.Vary = regsuball(beresp.http.Vary, ",? *User-Agent *", "");
-                set beresp.http.Vary = regsub(beresp.http.Vary, "^, *", "");
-                if (beresp.http.Vary == "") {
-                        unset beresp.http.Vary;
-                }
-        }
+	## Let' build Vary
+        # first cleaning it, because we don't care what backend wants.
+        unset beresp.http.Vary;
+        
+        # I normalize Accept-Language, so it can in vary
+	set beresp.http.Vary = beresp.http.Accept-Language;
+        
+	# Accept-Encoding could be in Vary, because it changes content
+	# But it is handled internally by Varnish.
+	# set beresp.http.Vary = beresp.http.vary + "," + beresp.http.Accept-Encoding
+	# User-Agent was sended to backend, but removing it from Vary prevents Varnish to use it for caching
+	# This isn't needed because of earlier unset
+        #if (beresp.http.Vary ~ "User-Agent") {
+        #        set beresp.http.Vary = regsuball(beresp.http.Vary, ",? *User-Agent *", "");
+        #        set beresp.http.Vary = regsub(beresp.http.Vary, "^, *", "");
+        #        if (beresp.http.Vary == "") {
+        #                unset beresp.http.Vary;
+        #        }
+        #}
 	
 	## Not found images from different caches after I started CDN; 
 	## yes, these should redirect on server but I don't know how
@@ -659,10 +670,11 @@ sub vcl_backend_response {
 	}
 	
 	## Do I really have to tell this again?
-	if (bereq.method == "POST") {
-		set beresp.uncacheable = true;
-		return(deliver);
-	}
+	# In-build, not needed. On other hand, it sends uncacheable right away to backend.
+	#if (bereq.method == "POST") {
+	#	set beresp.uncacheable = true;
+	#	return(deliver);
+	#}
 
 	## I set X-Trace header, prepending it to X-Trace header received from backend. 
 	# Useful for troubleshooting
@@ -712,7 +724,7 @@ sub vcl_deliver {
 
 	## Moodle: Revert back to original Cache-Control header before delivery to client
 	#if (resp.http.X-Orig-Cache-Control) {
-	#	set resp.http.Cache-Control = resp.http.X-Orig-Cache-Control;
+	 #	set resp.http.Cache-Control = resp.http.X-Orig-Cache-Control;
 	#	unset resp.http.X-Orig-Cache-Control;
 	#}
 
@@ -720,16 +732,11 @@ sub vcl_deliver {
 	# ext/addons/cors.vcl
 	call cors;
 	
-	# Origin should be in vary too
+	# Origin should send to browser
 	if (resp.http.Vary) {
 		set resp.http.Vary = resp.http.Vary + ",Origin";
 	} else {
 		set resp.http.Vary = "Origin";
-	}
-	
-	## I normalize Accept-Language, so it can in vary
-	if (resp.http.Vary) {
-		set resp.http.Vary = resp.http.vary + "," + resp.http.Accept-Language;
 	}
 
 	## A little bit more security, but only for those who are identied themselves as visitors
