@@ -96,7 +96,7 @@ sub common_rules {
 	## Auth requests shall be passed
 	# For some reason I couldn't browse images at WordPress if I pass. So, I'm using pipe instead.
 	if (req.http.Authorization || req.method == "POST") {
-		return(pipe);
+		return(pass);
 	}
 	
 	## Do not cache AJAX requests.
