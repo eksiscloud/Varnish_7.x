@@ -614,7 +614,8 @@ sub vcl_backend_response {
         
 	# Accept-Encoding could be in Vary, because it changes content
 	# But it is handled internally by Varnish.
-	# set beresp.http.Vary = beresp.http.vary + "," + beresp.http.Accept-Encoding
+	set beresp.http.Vary = beresp.http.Vary + "," + beresp.http.Accept-Encoding;
+	
 	# User-Agent was sended to backend, but removing it from Vary prevents Varnish to use it for caching
 	# This isn't needed because of earlier unset
         #if (beresp.http.Vary ~ "User-Agent") {
@@ -733,11 +734,7 @@ sub vcl_deliver {
 	call cors;
 	
 	# Origin should send to browser
-	if (resp.http.Vary) {
-		set resp.http.Vary = resp.http.Vary + ",Origin";
-	} else {
-		set resp.http.Vary = "Origin";
-	}
+	set resp.http.Vary = resp.http.Vary + ",Origin";
 
 	## A little bit more security, but only for those who are identied themselves as visitors
 	# CSP et cetera are just too big pain in the ass, when using Adsense, so... no.
