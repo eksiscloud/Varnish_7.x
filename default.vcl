@@ -355,9 +355,12 @@ sub vcl_recv {
 	#	}
 	#}
 	
-	# If a user agent isn't identified as user or a bot, its type is unknown
+	# If a user agent isn't identified as user or a bot, its type is unknown.
+	# We must presume it is a visitor. 
+	# There is big chance it is bot/scraper, but we have false identifications anyway. 
 	if (!req.http.x-user-agent) {
                 set req.http.x-user-agent = "Unlisted: " + req.http.User-Agent;
+		set req.http.x-bot = "visitor";
         }
 
 	## Stop bots and knockers seeking holes using 403.vcl
