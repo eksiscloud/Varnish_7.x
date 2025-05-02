@@ -501,8 +501,8 @@ sub vcl_hash {
 	## Return of User-Agent, but without caching
 	# Now I can send User-Agent to backend for 404 logging etc.
 	# Vary must be cleaned of course
-	if (req.http.x-user-agent) {
-		set req.http.User-Agent = req.http.x-user-agent;
+	if (req.http.x-agent) {
+		set req.http.User-Agent = req.http.x-agent;
 		unset req.http.x-user-agent;
 	}
 
