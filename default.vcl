@@ -420,7 +420,9 @@ sub vcl_recv {
 	}
 	
 	## URL changes by ext/redirect/manipulate.vcl, mostly fixed search strings
-	call new_direction;
+	if (req.http.x-bot == "visitor") {
+		call new_direction;
+	}
 	
 	## Awstats needs the host. I don't use it anymore, so this is just another example 
 	## You must add something like this in systemctl edit --full varnishncsa at line StartExec:
