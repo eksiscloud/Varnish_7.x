@@ -16,12 +16,17 @@
 # Marker to tell the VCL compiler that this VCL has been adapted to the 4.1 format.
 vcl 4.1;
 
+# native ones
 import std;		# Load the std, not STD for god sake
 import cookie;		# Load the cookie, former libvmod-cookie
 import purge;		# Soft/hard purge by Varnish 7.x
+
+# from geoip package, needs separate compiling per Varnish version
 import geoip2;		# Load the GeoIP2 by MaxMind
+
+# from package Varnish extra, needs separate compiling per Varnish version
 import accept;		# Fix Accept-Language
-import xkey;		# another way to ban
+#import xkey;		# another way to ban
 
 ## I'm using sub-vcls only to keep default.vcl a little bit easier to read
 
