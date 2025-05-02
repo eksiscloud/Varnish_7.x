@@ -609,12 +609,12 @@ sub vcl_backend_response {
         # first cleaning it, because we don't care what backend wants.
         unset beresp.http.Vary;
         
-        # I normalize Accept-Language, so it can in vary
-	set beresp.http.Vary = beresp.http.Accept-Language;
+        # I normalize Accept-Language, so it can be in vary
+	set beresp.http.Vary = "Accept-Language";
         
 	# Accept-Encoding could be in Vary, because it changes content
 	# But it is handled internally by Varnish.
-	set beresp.http.Vary = beresp.http.Vary + "," + beresp.http.Accept-Encoding;
+	set beresp.http.Vary = beresp.http.Vary + ",Accept-Encoding";
 	
 	# User-Agent was sended to backend, but removing it from Vary prevents Varnish to use it for caching
 	# This isn't needed because of earlier unset
@@ -728,6 +728,9 @@ sub vcl_deliver {
 	 #	set resp.http.Cache-Control = resp.http.X-Orig-Cache-Control;
 	#	unset resp.http.X-Orig-Cache-Control;
 	#}
+
+	## Vary to browser
+	set resp.http.Vary = "Accept-Language,Accept-Encoding";
 
 	## Let's add the origin by cors.vcl. But I'm using * so...
 	# ext/addons/cors.vcl
