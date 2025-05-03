@@ -27,21 +27,22 @@ sub wp_basics {
 	}
 	
 	## Stop behaving bad
-	if (
-		   req.url ~ "/adminer"
-		|| req.http.User-Agent ~ "jetmon"
-		|| req.http.User-Agent ~ "Jetpack by WordPress.com"
-		) {
-		if (
-			   req.http.X-County-Code ~ "fi"
-			|| req.http.x-language ~ "fi" 
-			|| req.http.x-agent == "nice"
-			) {
-				return(synth(403, "Forbidden: " + req.http.X-Real-IP));
-		} else {
-				return(synth(666, "Forbidden: " + req.http.X-Real-IP));
-		}
-	}
+	# I don't use Adminer any more
+	#if (
+	#	   req.url ~ "/adminer"
+	#	|| req.http.User-Agent ~ "jetmon"
+	#	|| req.http.User-Agent ~ "Jetpack by WordPress.com"
+	#	) {
+	#	if (
+	#		   req.http.X-County-Code ~ "fi"
+	#		|| req.http.x-language ~ "fi" 
+	#		|| req.http.x-agent == "nice"
+	#		) {
+	#			return(synth(403, "Forbidden: " + req.http.X-Real-IP));
+	#	} else {
+	#			return(synth(666, "Forbidden: " + req.http.X-Real-IP));
+	#	}
+	#}
 	
 	## Fix Wordpress visual editor issues, must be the first one as url requests to work (well, not exacly first...)
 	# Backend of Wordpress
