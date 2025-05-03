@@ -17,9 +17,9 @@ sub wp_basics {
 	
 	## admin-ajax can be a little bit faster, sometimes, but only if GET
 	# This must be before passing wp-admin
-	if (req.url ~ "admin-ajax.php" && req.http.cookie !~ "wordpress_logged_in" ) {
-		return (hash);
-	}
+	#if (req.url ~ "admin-ajax.php" && req.http.cookie !~ "wordpress_logged_in" ) {
+	#	return (hash);
+	#}
 	
 	# Some devices, mainly from Apple, send urls ending /null
 	if (req.url ~ "/null$") {
@@ -46,7 +46,10 @@ sub wp_basics {
 	
 	## Fix Wordpress visual editor issues, must be the first one as url requests to work (well, not exacly first...)
 	# Backend of Wordpress
-	if (req.url ~ "/wp-((login|admin)|my-account|comments-post.php|cron)" || req.url ~ "/(login|lataus)" || req.url ~ "preview=true") {
+	if (req.url ~ "^/wp-admin/") { return(pipe); }
+
+
+	if (req.url ~ "/wp-(login|my-account|comments-post.php|cron)" || req.url ~ "/(login|lataus)" || req.url ~ "preview=true") {
 		return(pass);
 	}
 
