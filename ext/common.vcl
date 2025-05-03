@@ -95,8 +95,8 @@ sub common_rules {
 	
 	## Auth requests shall be passed
 	# In-build rule. doesn't needed here.
-	if (req.http.Authorization || req.method == "POST") {
-		return(pipe);
+	if (req.http.Authorization || req.http.Cookie) {
+		return(pass);
 	}
 	
 	## Do not cache AJAX requests.
