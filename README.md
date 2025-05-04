@@ -8,6 +8,11 @@ Heads up - this is from live setup, so remember change at least urls. And becaus
 
 Always be really carefully when you do copy&paste from anywhere.
 
+## Known major issues at the moment
+
+**4.5.2025**: WordPress admin goes into cache, and needs reloading everytime something should be done. At same time at same t.ex. automatic tag offering when editing a post doesn't work.
+Use return(pipe); for important sites that needs admin often.
+
 ## The stack
 
 The stack is:
