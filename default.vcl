@@ -24,7 +24,9 @@ import purge;		# Soft/hard purge by Varnish 7.x
 # from geoip package, needs separate compiling per Varnish version
 import geoip2;		# Load the GeoIP2 by MaxMind
 
-# from package Varnish extra, needs separate compiling per Varnish version
+# from apt install varnish modules but it needs same Varnish version that repo is delivering
+# I compiled, but it was still claiming Varnish was in apt-given version, even it was newer.
+# So I gave up with newer ones.
 import accept;		# Fix Accept-Language
 #import xkey;		# another way to ban
 
